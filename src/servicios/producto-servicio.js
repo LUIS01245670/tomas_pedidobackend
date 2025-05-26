@@ -21,11 +21,11 @@ productoServicio.consultar = (io, db, datoConsulta) => {
     cantidad = ` cantidad${(Number(usuario.almacen.slice(-1)) + 1).toString()}`;
   }
   var consulta = `SELECT ${cantidad},codigo,descripcion
-            ,codigocontable,codigoBarra,referencia,precio1,tasaIva,presentacion FROM productos order by descripcion`;
+            ,codigocontable,codigoBarra,referencia,precio1,tasaIva,presentacion FROM productos`;
 
   switch (datoConsulta.condicion.trim().toUpperCase()) {
     case "CODIGOBARRA":
-      consulta += ` WHERE codigoBarra = '${datoConsulta.datoCondicion.trim()}'`;
+      consulta += ` WHERE codigoBarra = '${datoConsulta.datoCondicion.trim()}' `;
       break;
     case "REF":
       consulta += ` WHERE referencia LIKE '%${datoConsulta.datoCondicion.trim()}%'`;
@@ -33,16 +33,16 @@ productoServicio.consultar = (io, db, datoConsulta) => {
     case "ID":
       consulta += ` WHERE codigo = '${parseInt(
         datoConsulta.datoCondicion.trim()
-      )}'`;
+      )}  order by descripcion'`;
       break;
     case "DESCRIPCION":
-      consulta += ` WHERE descripcion LIKE '${datoConsulta.datoCondicion.trim()}%' OR  referencia LIKE '${datoConsulta.datoCondicion.trim()}%'`;
+      consulta += ` WHERE descripcion LIKE '${datoConsulta.datoCondicion.trim()}%' OR  referencia LIKE '${datoConsulta.datoCondicion.trim()}%'  order by descripcion`;
       break;
     case "CODIGO":
-      consulta += ` WHERE codigoBarra LIKE '%${datoConsulta.datoCondicion.trim()}%' OR codigo LIKE '%${datoConsulta.datoCondicion.trim()}%' OR referencia LIKE '%${datoConsulta.datoCondicion.trim()}%'`;
+      consulta += ` WHERE codigoBarra LIKE '%${datoConsulta.datoCondicion.trim()}%' OR codigo LIKE '%${datoConsulta.datoCondicion.trim()}%' OR referencia LIKE '%${datoConsulta.datoCondicion.trim()}%'  order by descripcion`;
       break;
     case "CODIGO-EQUAL":
-      consulta += ` WHERE codigoBarra = '${datoConsulta.datoCondicion.trim()}' OR codigo = '${datoConsulta.datoCondicion.trim()}' OR referencia = '${datoConsulta.datoCondicion.trim()}'`;
+      consulta += ` WHERE codigoBarra = '${datoConsulta.datoCondicion.trim()}' OR codigo = '${datoConsulta.datoCondicion.trim()}' OR referencia = '${datoConsulta.datoCondicion.trim()}'  order by descripcion`;
       break;
     default:
       consulta = `SELECT ${cantidad},codigo,descripcion
