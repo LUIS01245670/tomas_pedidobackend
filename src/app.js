@@ -59,6 +59,7 @@ const midlewaraseccion = seccion({
     secure: true, // ⬅️ obligatorio para que se envíe por HTTPS* borrar a subir a producccion
     httpOnly: true, // ⬅️ recomendado para seguridad (aunque puedes poner false si necesitas leerla en JS)
     domain: ".onrender.com",
+    Path: "/",
   },
 });
 
