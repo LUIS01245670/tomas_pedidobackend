@@ -21,7 +21,7 @@ productoServicio.consultar = (io, db, datoConsulta) => {
     cantidad = ` cantidad${(Number(usuario.almacen.slice(-1)) + 1).toString()}`;
   }
   var consulta = `SELECT ${cantidad},codigo,descripcion
-            ,codigocontable,codigoBarra,referencia,precio1,tasaIva,presentacion FROM productos`;
+            ,codigocontable,codigoBarra,referencia,precio1,tasaIva,presentacion FROM productos `;
 
   switch (datoConsulta.condicion.trim().toUpperCase()) {
     case "CODIGOBARRA":
@@ -31,12 +31,11 @@ productoServicio.consultar = (io, db, datoConsulta) => {
       consulta += ` WHERE referencia LIKE '%${datoConsulta.datoCondicion.trim()}%'`;
       break;
     case "ID":
-      consulta += ` WHERE codigo = '${parseInt(
-        datoConsulta.datoCondicion.trim()
-      )}  order by descripcion'`;
+      consulta += ` WHERE codigo = '${parseInt(datoConsulta.datoCondicion)}'`;
       break;
     case "DESCRIPCION":
-      consulta += ` WHERE descripcion LIKE '${datoConsulta.datoCondicion.trim()}%' OR  referencia LIKE '${datoConsulta.datoCondicion.trim()}%'  order by descripcion`;
+      consulta += ` WHERE descripcion LIKE '${datoConsulta.datoCondicion.trim()}%' OR  referencia LIKE '${datoConsulta.datoCondicion.trim()}%'  OR codigoBarra LIKE '${datoConsulta.datoCondicion.trim()}%' order by descripcion`;
+
       break;
     case "CODIGO":
       consulta += ` WHERE codigoBarra LIKE '%${datoConsulta.datoCondicion.trim()}%' OR codigo LIKE '%${datoConsulta.datoCondicion.trim()}%' OR referencia LIKE '%${datoConsulta.datoCondicion.trim()}%'  order by descripcion`;
@@ -56,6 +55,7 @@ productoServicio.consultar = (io, db, datoConsulta) => {
   sequelize
     .query(consulta, { type: sequelize.QueryTypes.SELECT })
     .then((producto) => {
+      console.log(producto);
       if (producto.length > 0) {
         respuesta = {
           sistema: "POS",
@@ -67,6 +67,7 @@ productoServicio.consultar = (io, db, datoConsulta) => {
 
         io.emit(process.env.CANALSERVIDOR, JSON.stringify(respuesta));
       } else {
+        console.log("error aqui");
         respuesta = {
           sistema: "POS",
           estadoPeticion: "ERROR",
@@ -76,9 +77,11 @@ productoServicio.consultar = (io, db, datoConsulta) => {
         };
 
         io.emit(process.env.CANALSERVIDOR, JSON.stringify(respuesta));
+        io.emit(process.env.CANALSERVIDOR, JSON.stringify(respuesta));
       }
     })
     .catch((err) => {
+      console.log(err);
       console.log(err);
       respuesta = {
         sistema: "POS",
@@ -88,6 +91,7 @@ productoServicio.consultar = (io, db, datoConsulta) => {
         canalUsuario: canalUsuario,
       };
 
+      io.emit(process.env.CANALSERVIDOR, JSON.stringify(respuesta));
       io.emit(process.env.CANALSERVIDOR, JSON.stringify(respuesta));
     })
     .finally(async () => await sequelize.close());
